@@ -4,7 +4,7 @@
   "description": "Client side error log",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build ./aws/tsconfig.json",
     "watch": "tsc -w",
     "cdk": "cdk",
     "test": "echo \"Error: no test specified\" && exit 1"

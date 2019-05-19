@@ -41,11 +41,14 @@ export class NamedApi extends Construct {
      * @description - Create the s3 code bucket for the lambda code, create the lambda function
      * @return {Lambda.Function} handler - Bulk return of the lambda;
      */
-    protected function createLambdaBackend() { 
+    protected createLambdaBackend() { 
         const lambdaCodeBucket = new Bucket(this, 'LambdaCode');
+        // seems to resolve relative to the project which is nice
+        // I'm sure a path.resolve(__dirname, 'path', 'blah') could come in handy here
+        // or maybe even a separate bucket
         const handlerConfig = {
             runtime: Runtime.NodeJS810,
-            code: Code.directory('src/lambda'),
+            code: Code.directory('aws/src/lambda'),
             handler: 'lambda.main',
             environment: {
                 BUCKET: lambdaCodeBucket.bucketName
@@ -60,7 +63,7 @@ export class NamedApi extends Construct {
      * @return {RestApi} api - broad return of the restapi
      * 
      */
-    protected function createApiGateway() { 
+    protected createApiGateway() { 
         // start apigateway logic
         const api = new RestApi(this, NamedApi.name, {
             deployOptions: {
@@ -77,7 +80,7 @@ export class NamedApi extends Construct {
      * @description - Create API 
      * @return {HttpMethodIntegration[]} - An array of the HTTP methods and the associated lambda function 
      */
-    protected function createLambdaIntegrations(lambdaHandler: Function) {
+    protected createLambdaIntegrations(lambdaHandler: Function) {
         const integrations = [];
         const apiGatewayLambdaIntegrationConfig = {
             requestTemplates: { "application/json": '{ "statusCode": "200" }'}
@@ -107,7 +110,7 @@ export class NamedApi extends Construct {
      * @description - Associate a RestApi with the provided integrations
      * @return void;
      */
-    protected function associateApiGatewayWithLambda(api: RestApi, integrations: HttpMethodIntegration[]) {
+    protected associateApiGatewayWithLambda(api: RestApi, integrations: HttpMethodIntegration[]) {
         const apiRoot = api.root;
         integrations.map(({ method, integration }) => {
             apiRoot.addMethod(method, integration); 
@@ -120,7 +123,7 @@ export class NamedApi extends Construct {
      * @param {object} siteinfo - Domain name + api prefix
      * @return void
      */
-    protected function associateApiGatewayWithDns(apiArn: string, domainName: string, apiName: string, ) { 
+    protected associateApiGatewayWithDns(apiArn: string, domainName: string, apiName: string, ) { 
         // cheat since I already have the cname
         const zone = new HostedZoneProvider(this, { domainName: domainName }).findAndImport(this, 'Zone');
         const cnameRecordConfig = {

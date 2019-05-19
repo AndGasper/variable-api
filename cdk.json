@@ -1,10 +1,10 @@
 {
-    "app": "node ./build/index.js",
+    "app": "node ./aws/build/index.js",
     "context": {
         "domain": "wakemygameup.com",
         "subdomain": {
             "apiPrefix": "api"
         }
     },
-    "outdir": "./template-output"
+    "outDir": "./template-output"
 }
