@@ -61,7 +61,57 @@ Attempt 5:
     }]
 }
 ```
+- Attempt 5: Manually copy/paste the cloudformation template into the designer to attempt deployment to see if my permissions will override. If so, then investigate breaking up the stack and grab the arn.
+- Don't know the parameters.
+- Deploying again to get the arn for the cloudwatch role so I can say: 
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Sid": "GetRoleForLogs",
+        "Effect": "Allow",
+        "Action": ["iam:GetRole"],
+        "Resource": ["arn:aws:iam:::roleArn"]
+    }]
+}
+```
+---------------
+Attempt 6
+- Created a policy to GetRole
+- Attached the role to the deploying user
+- Manually delete stack
+- Deploy
+- New error: Not allowed to `iam:PassRole`
+----------------
+Attempt 7
+- Added iam:PassRole
+- Manually deleted stack
+- Redeploy
+- New error: not allowd to `lambda:CreateFunction`
+------------------
+Attempt 8
+- Added `lambda:CreateFunction`
+- Attached to deploying user => no
+    - can only have 10 policies per user.
+- Manually deleted stack
+--------------
+- Had to delete some policies that were duplicates when I took another look at them 
+Attempt 9
+- New error: Don't have permission to `lambda:GetFunctionConfiguration`
+- Manually delete stack
+- Add the `lambda:GetFunctionConfiguration` to a `variable_api_policy` and attached to deploying user
+- New error: Not allowed to `lambda:AddPermission`
+----
+Attempt 10
+- Added the permission
+- Manually deleted stack
+- Redeployed. Success
 
+
+
+- Maybe a role for deploying? 
+- Just a guess but people probably spin up a vpc, put an EC2 instance in it
+    - then they create the policies and set a condition for the source ip that corresponds to that vpc CIDR block
 
 ### IAM Policies
 - S3
