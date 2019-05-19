@@ -1,0 +1,30 @@
+{
+  "name": "client-side-error-logging",
+  "version": "1.0.0",
+  "description": "Client side error log",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws-cdk",
+    "cloudformation",
+    "aws"
+  ],
+  "author": "Andres Gasper",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^0.31.0",
+    "@aws-cdk/aws-lambda": "^0.31.0",
+    "@aws-cdk/aws-route53": "^0.31.0",
+    "@aws-cdk/aws-s3": "^0.31.0",
+    "aws-cdk": "^0.31.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  }
+}
